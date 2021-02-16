@@ -8,11 +8,6 @@ import Rank from './components/Rank/Rank';
 import Register from './components/Register/Register';
 import Signin from './components/Signin/Signin'; 
 import Particles from 'react-particles-js';
-import Clarifai from 'clarifai';
-
-const app = new Clarifai.App({
-  apiKey: 'f156317e4e4646c597f62eef4a7ef54f'
-});
 
 const particlesOptions = {
     fpsLimit: 60,
@@ -109,11 +104,17 @@ class App extends Component {
 
   onButtonClick = () => {
     this.setState({imageURL:this.state.input});
-    app.models.predict('a403429f2ddf4b49b307e318f00e528b',
-    this.state.input)
+    fetch('https://young-mesa-75445.herokuapp.com/imageurl', {
+            method : 'post',
+            headers : {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                input : this.state.input
+            })
+        })
+        .then(response => response.json())
     .then(response => {
       if (response) {
-        fetch('http://localhost:3000/image', {
+        fetch('https://young-mesa-75445.herokuapp.com/image', {
             method : 'put',
             headers : {'Content-Type': 'application/json'},
             body: JSON.stringify({
